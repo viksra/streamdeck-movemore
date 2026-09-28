@@ -87,7 +87,7 @@ describe("editor HTTP server", () => {
 		options = (port) => ({
 			profilesRoot: fx.profilesRoot,
 			dataDir: fx.dataDir,
-			editorDir,
+			editor: editorDir,
 			iconDirs: [],
 			port,
 			version: "test",
@@ -111,6 +111,23 @@ describe("editor HTTP server", () => {
 		assert.equal(res.status, 200);
 		assert.match(res.body, /<title>editor/);
 		assert.match(String(res.headers["content-security-policy"]), /script-src 'self'/);
+	});
+
+	it("serves the editor from files bundled into the plugin", async () => {
+		const bundled = await startServer({ ...options(38498), editor: { "index.html": "<!doctype html><title>bundled</title>", "app.js": "export {};" } });
+		try {
+			const page = await request(bundled.port, "GET", "/");
+			assert.equal(page.status, 200);
+			assert.match(page.body, /<title>bundled/);
+			assert.match(String(page.headers["content-security-policy"]), /script-src 'self'/);
+			const script = await request(bundled.port, "GET", "/app.js");
+			assert.equal(script.headers["content-type"], "text/javascript; charset=utf-8");
+			assert.equal((await request(bundled.port, "GET", "/missing.js")).status, 404);
+			assert.equal((await request(bundled.port, "GET", "/..%2Fapp.js")).status, 404);
+			assert.equal((await request(bundled.port, "GET", "/toString")).status, 404);
+		} finally {
+			await bundled.close();
+		}
 	});
 
 	it("rejects other host names (DNS rebinding)", async () => {

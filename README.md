@@ -116,12 +116,15 @@ The dev server follows the profile Stream Deck shows, like the plugin. To simula
 
 For live development against Stream Deck: `npx streamdeck link com.viksra.movemore.sdPlugin`, then `npm run watch` and `npx streamdeck restart com.viksra.movemore` after changes. Plugin logs are in `com.viksra.movemore.sdPlugin/logs/`, and each apply writes `helper.log` into its transaction folder under `%APPDATA%\StreamDeckMoveMore\transactions\`.
 
+The plugin never reads its own folder at runtime, because Marketplace DRM encrypts it. The build compiles the editor's files, the apply helper and the version into `bin/plugin.js`; the plugin writes the helper to `%APPDATA%\StreamDeckMoveMore\helper\` when applying.
+
 ### Layout
 
 ```
 src/
   plugin.ts             Stream Deck entry: Layout Editor action, editor server
   apply-helper.ts       separate process: closes Stream Deck, applies, restarts it
+  bundled.d.ts          modules the build compiles into the plugin (editor files, helper, version)
   server/               HTTP API, live change feed (profile watcher), editor view model
   profiles/             ProfilesV3 reader, move planner (validation, image handling), devices, icons,
                         the profile Stream Deck shows (from its registry settings)

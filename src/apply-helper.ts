@@ -1,6 +1,7 @@
 /**
- * Entry point of bin/apply-helper.js. Started by the plugin as a separate background process:
- *   node apply-helper.js <transaction>/plan.json
+ * The apply helper. Bundled into the plugin, which writes it to its data folder and starts it as a
+ * separate background process:
+ *   node apply-helper.mjs <transaction>/plan.json
  * Closes Stream Deck, applies the staged profile changes, starts Stream Deck again.
  */
 import { appendFileSync } from "node:fs";

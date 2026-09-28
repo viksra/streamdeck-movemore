@@ -3,12 +3,15 @@
  * provides the "Layout Editor" key, which opens it in the default browser.
  */
 import { execFile } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import streamDeck, { type KeyDownEvent, type SendToPluginEvent, SingletonAction } from "@elgato/streamdeck";
 import type { JsonObject, JsonValue } from "@elgato/utils";
+import helperSource from "bundled:apply-helper";
+import editorFiles from "bundled:editor";
+import version from "bundled:version";
 
 import { startHelper } from "./apply/launcher.ts";
 import { pruneData } from "./apply/transaction.ts";
@@ -20,7 +23,6 @@ import { startServer } from "./server/http.ts";
 const ACTION_UUID = "com.viksra.movemore.editor";
 const PREFERRED_PORT = 38457;
 
-const pluginDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dataDir = defaultDataDir();
 streamDeck.logger.setLevel("info");
 const log = streamDeck.logger.createScope("Move More");
@@ -28,10 +30,10 @@ const log = streamDeck.logger.createScope("Move More");
 const server = await startServer({
 	profilesRoot: defaultProfilesRoot(),
 	dataDir,
-	editorDir: path.join(pluginDir, "editor"),
+	editor: editorFiles,
 	iconDirs: [userPluginsDir(), builtinPluginsDir()],
 	port: PREFERRED_PORT,
-	version: (JSON.parse(readFileSync(path.join(pluginDir, "manifest.json"), "utf8")) as { Version: string }).Version,
+	version,
 	restarts: true,
 	log,
 	restartSpec: async () => ({
@@ -45,7 +47,11 @@ const server = await startServer({
 		closeTimeoutMs: 0,
 	}),
 	runTransaction: async (planPath) => {
-		const pid = startHelper(process.execPath, path.join(pluginDir, "bin", "apply-helper.js"), planPath);
+		// Written out first: under Marketplace DRM the plugin's own files can't be run by another process.
+		const helper = path.join(dataDir, "helper", "apply-helper.mjs");
+		await mkdir(path.dirname(helper), { recursive: true });
+		await writeFile(helper, helperSource);
+		const pid = startHelper(process.execPath, helper, planPath);
 		log.info(`Apply helper started (pid ${pid}) for ${planPath}`);
 	},
 	readSelection: readStreamDeckSelection,

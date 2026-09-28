@@ -16,8 +16,11 @@ import { watchProfileContent } from "./profile-watcher.ts";
 export interface ServerOptions {
 	profilesRoot: string;
 	dataDir: string;
-	/** Folder with the browser editor (index.html, app.js, ...). */
-	editorDir: string;
+	/**
+	 * The browser editor (index.html, app.js, ...): the folder it's in, or its files by name. The
+	 * plugin passes its files: under Marketplace DRM it can't read its own folder.
+	 */
+	editor: string | Readonly<Record<string, string>>;
 	/** Plugin folders scanned for default key images. */
 	iconDirs: string[];
 	/** Preferred port; the next few are tried when it is taken. */
@@ -156,7 +159,13 @@ export async function startServer(options: ServerOptions): Promise<RunningServer
 		if (parts[0] === "api") return api(req, res, parts.slice(1));
 		if (parts[0] === "img") return image(res, parts.slice(1));
 		if (req.method !== "GET" && req.method !== "HEAD") throw new HttpError(405, "Method not allowed.");
-		return serveFile(res, options.editorDir, parts.length ? parts.join("/") : "index.html");
+		const file = parts.length ? parts.join("/") : "index.html";
+		if (typeof options.editor === "string") return serveFile(res, options.editor, file);
+		const text = Object.hasOwn(options.editor, file) ? options.editor[file] : undefined;
+		const type = CONTENT_TYPES[path.extname(file).toLowerCase()];
+		if (text === undefined || !type) throw new HttpError(404, "Not found.");
+		res.writeHead(200, fileHeaders(type));
+		res.end(text);
 	}
 
 	async function api(req: IncomingMessage, res: ServerResponse, parts: string[]): Promise<void> {
@@ -326,15 +335,19 @@ function serveFile(res: ServerResponse, root: string, relative: string): Promise
 	if (!file.startsWith(base + path.sep) || !type || !existsSync(file) || !statSync(file).isFile()) {
 		throw new HttpError(404, "Not found.");
 	}
-	res.writeHead(200, {
+	res.writeHead(200, fileHeaders(type));
+	return new Promise((resolve, reject) => {
+		createReadStream(file).on("error", reject).on("end", resolve).pipe(res);
+	});
+}
+
+function fileHeaders(type: string): Record<string, string> {
+	return {
 		"Content-Type": type,
 		"Cache-Control": "no-cache",
 		"X-Content-Type-Options": "nosniff",
 		...(type.startsWith("text/html") ? { "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'" } : {}),
-	});
-	return new Promise((resolve, reject) => {
-		createReadStream(file).on("error", reject).on("end", resolve).pipe(res);
-	});
+	};
 }
 
 function readJson(req: IncomingMessage, limit = 1_000_000): Promise<unknown> {

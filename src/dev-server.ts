@@ -44,7 +44,7 @@ const pluginDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..
 const server = await startServer({
 	profilesRoot,
 	dataDir: path.resolve(values.data ?? path.join(path.dirname(profilesRoot), "movemore-data")),
-	editorDir: path.join(pluginDir, "editor"),
+	editor: path.join(pluginDir, "editor"),
 	iconDirs: [userPluginsDir(), builtinPluginsDir()],
 	port: Number(values.port),
 	version: (JSON.parse(readFileSync(path.join(pluginDir, "manifest.json"), "utf8")) as { Version: string }).Version,

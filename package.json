@@ -1,6 +1,6 @@
 {
   "name": "streamdeck-movemore",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "private": true,
   "description": "Stream Deck plugin that lets you select several keys at once and move them together.",
   "license": "MIT",
