@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
 	"Name": "Move More",
-	"Version": "1.5.1.0",
+	"Version": "1.5.2.0",
 	"Author": "viksra",
 	"Description": "Select several keys at once and move them together: within a page, or between pages and folders shown side by side. Also search keys, zoom, and add, reorder or delete pages. Opens a layout editor in your browser; Stream Deck restarts to load the new layout and a backup is kept for every change.",
 	"UUID": "com.viksra.movemore",

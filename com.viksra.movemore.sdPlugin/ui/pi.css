@@ -25,16 +25,6 @@ strong {
 	color: #969696;
 }
 
-a {
-	color: #8fb1ff;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
 #url {
 	color: #d8d8d8;
 	-webkit-user-select: text;

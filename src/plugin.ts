@@ -62,7 +62,12 @@ class OpenEditorAction extends SingletonAction {
 	override readonly manifestId = ACTION_UUID;
 
 	override async onKeyDown(ev: KeyDownEvent): Promise<void> {
-		await openEditor(ev.action.device.name);
+		try {
+			await openEditor(ev.action.device.name);
+		} catch (err) {
+			log.error(`Could not open the editor: ${errorMessage(err)}`);
+			return ev.action.showAlert();
+		}
 		await ev.action.showOk();
 	}
 

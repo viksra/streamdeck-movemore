@@ -148,7 +148,6 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round
 .btn.ghost { background: none; border-color: transparent; color: var(--muted); }
 .btn.ghost:hover:not(:disabled) { background: var(--panel-2); color: var(--text); }
 .btn.small { height: 28px; padding: 0 9px; font-size: 13px; }
-a.btn { text-decoration: none; }
 .btn svg { width: 16px; height: 16px; flex: none; }
 
 .segmented { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid var(--line-2); border-radius: 9px; background: var(--panel-2); }

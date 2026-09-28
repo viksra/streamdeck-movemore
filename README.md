@@ -4,7 +4,7 @@ Select several keys at once and move them together: around a page, to another pa
 
 ![Selecting four keys and dragging them from Page 1 to Page 2 in the Move More editor](assets/demo.gif)
 
-Move More is free and open source ([MIT](LICENSE)). If it saves you time, you can [buy me a coffee](https://buymeacoffee.com/viksra). The editor has a **Donate** link at the bottom of its sidebar too.
+Move More is free and open source ([MIT](LICENSE)). If it saves you time, you can [buy me a coffee](https://buymeacoffee.com/viksra).
 
 ## How it works
 

@@ -27,11 +27,3 @@ window.connectElgatoStreamDeckSocket = (port, uuid, registerEvent, info, actionI
 };
 
 document.getElementById("open").addEventListener("click", () => sendToPlugin({ event: "open-editor" }));
-
-// Links would open inside the property inspector; Stream Deck opens them in the browser instead.
-document.getElementById("donate").addEventListener("click", (e) => {
-	e.preventDefault();
-	if (socket && socket.readyState === WebSocket.OPEN) {
-		socket.send(JSON.stringify({ event: "openUrl", payload: { url: e.currentTarget.href } }));
-	}
-});
