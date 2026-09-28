@@ -1,0 +1,57 @@
+/* Matches the look of Stream Deck's own property inspector panel. */
+html, body {
+	margin: 0;
+	background: #2d2d2d;
+	color: #d8d8d8;
+	font: 9pt/1.45 "Segoe UI", system-ui, sans-serif;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.pi {
+	padding: 8px 14px 14px;
+}
+
+p {
+	margin: 8px 0;
+}
+
+strong {
+	color: #ffffff;
+	font-weight: 600;
+}
+
+.muted {
+	color: #969696;
+}
+
+a {
+	color: #8fb1ff;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+#url {
+	color: #d8d8d8;
+	-webkit-user-select: text;
+	user-select: text;
+}
+
+button {
+	margin: 6px 0 4px;
+	padding: 6px 14px;
+	border: 0;
+	border-radius: 3px;
+	background: #3d6fe0;
+	color: #ffffff;
+	font: 600 9pt "Segoe UI", system-ui, sans-serif;
+	cursor: pointer;
+}
+
+button:hover {
+	background: #4f7ff0;
+}

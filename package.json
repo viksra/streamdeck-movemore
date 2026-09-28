@@ -1,0 +1,32 @@
+{
+  "name": "streamdeck-movemore",
+  "version": "1.5.1",
+  "private": true,
+  "description": "Stream Deck plugin that lets you select several keys at once and move them together.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viksra/streamdeck-movemore.git"
+  },
+  "homepage": "https://github.com/viksra/streamdeck-movemore",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "node --test --test-reporter=spec \"test/**/*.test.ts\"",
+    "dev": "node scripts/build.mjs && node dist/dev-server.js",
+    "icons": "node scripts/make-icons.mjs",
+    "validate": "streamdeck validate com.viksra.movemore.sdPlugin",
+    "pack": "node scripts/build.mjs --production && streamdeck pack com.viksra.movemore.sdPlugin --output release --force",
+    "link": "streamdeck link com.viksra.movemore.sdPlugin"
+  },
+  "devDependencies": {
+    "@elgato/cli": "^1.10.1",
+    "@elgato/streamdeck": "^2.1.2",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^20.19.43",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}
